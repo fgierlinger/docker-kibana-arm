@@ -1,0 +1,51 @@
+name: CI
+on: 
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [7.10.2, 7.11.0]
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v2
+      - 
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      - 
+        name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - 
+        name: Build kibana:${{ matrix.version }}
+        if: github.event_name == 'pull_request'
+        uses: docker/build-push-action@v2
+        with:
+          push: false
+          platforms: linux/arm64
+          tags: fgierlinger/kibana:${{ matrix.version }}
+          file: Dockerfile
+          build-args: |
+            KIBANAVERSION=v${{ matrix.version }}
+      - 
+        name: Build kibana:${{ matrix.version }} and push
+        if: github.event_name == 'push'
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          platforms: linux/arm64
+          tags: fgierlinger/kibana:${{ matrix.version }}
+          file: Dockerfile
+          build-args: |
+            KIBANAVERSION=v${{ matrix.version }}
