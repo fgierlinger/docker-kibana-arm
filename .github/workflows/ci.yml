@@ -37,7 +37,7 @@ jobs:
           tags: fgierlinger/kibana:${{ matrix.version }}
           file: Dockerfile
           build-args: |
-            KIBANAVERSION=v${{ matrix.version }}
+            KIBANAVERSION=${{ matrix.version }}
       - 
         name: Build kibana:${{ matrix.version }} and push
         if: github.event_name == 'push'
@@ -48,4 +48,4 @@ jobs:
           tags: fgierlinger/kibana:${{ matrix.version }}
           file: Dockerfile
           build-args: |
-            KIBANAVERSION=v${{ matrix.version }}
+            KIBANAVERSION=${{ matrix.version }}
