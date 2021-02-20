@@ -11,4 +11,4 @@ USER kibana
 
 WORKDIR /usr/share/kibana
 
-CMD ['bin/kibana', '-e', '-c', 'config/kibana.yml']
+CMD ["bin/kibana", "-e", "-c", "config/kibana.yml"]
